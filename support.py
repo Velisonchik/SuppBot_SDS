@@ -33,8 +33,10 @@ def create_new_issue(subject: str, description: str, username: str, tracker_id_i
     issue.done_ratio = 40
     if file_path != '':
         issue.uploads = [{'path': f'{file_path}', 'filename': f'{file_path}'}]
-    issue.save()
-    os.remove(file_path)
+        issue.save()
+        os.remove(file_path)
+    else:
+        issue.save()
 
     redmine_for_current_user = Redmine(SUPPORT_SITE, key=redmine_adm.user.get(assigned_to_id).api_key,
                                        version=SUPPORT_VERSION)
