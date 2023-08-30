@@ -5,8 +5,8 @@ from pprint import pprint
 
 from time import sleep
 from ad import get_ids_from_ad
-from support import create_new_issue
-from reqs import BOT_TOKEN, HELP_TEXT_FOR_BOT
+from support import create_new_CLOSED_issue
+from reqs import BOT_TOKEN_FOR_CLOSED_ISSUE, HELP_TEXT_FOR_BOT
 from aiogram import Bot, Dispatcher, enums
 from aiogram.types import Message
 from aiogram.filters import Command
@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO, filename="SuppBot.log", format="%(asctim
                                                                        " %(message)s")
 
 # Создаем объекты бота и диспетчера
-bot: Bot = Bot(BOT_TOKEN)
+bot: Bot = Bot(BOT_TOKEN_FOR_CLOSED_ISSUE)
 dp: Dispatcher = Dispatcher()
 
 # Словарь, в котором будут храниться данные пользователя
@@ -99,16 +99,14 @@ async def adding_text_from_forward(message: Message):
 
             print(users_dict)
             logging.info(f'Issue INIT WITH FORWARD {users_dict[message.from_user.id]}')
-            users_dict[message.from_user.id]['issue_URI'] = create_new_issue(
+            users_dict[message.from_user.id]['issue_URI'] = create_new_CLOSED_issue(
                 subject=users_dict[message.from_user.id]['text'][:254],
-                description=users_dict[message.from_user.id]['text'],
-                username=allow_ids[str(message.from_user.id)],
+                description=users_dict[message.from_user.id]['text'], username=allow_ids[str(message.from_user.id)],
                 tracker_id_in_str=users_dict[message.from_user.id]['j'],
-                elapsed_time=float(users_dict[message.from_user.id]['t']),
-                author_issue=username_from_ad, comment=users_dict[message.from_user.id]['comment'],
+                elapsed_time=float(users_dict[message.from_user.id]['t']), author_issue=username_from_ad,
+                comment=users_dict[message.from_user.id]['comment'],
                 file_path='' if 'file_path' not in users_dict[message.from_user.id].keys() else
-                users_dict[message.from_user.id]['file_path']
-            )
+                users_dict[message.from_user.id]['file_path'])
             await message.reply(users_dict[message.from_user.id]['issue_URI'])
             logging.info(f"Issue CREATED WITH FORWARD {users_dict[message.from_user.id]}")
             users_dict[message.from_user.id] = {}
@@ -139,7 +137,7 @@ async def first_create_issue(message: Message):
                 if 'comment' not in users_dict[message.from_user.id].keys() \
                         and 'text' in users_dict[message.from_user.id]:
                     logging.info(f'Issue INIT WO forward {users_dict[message.from_user.id]}')
-                    users_dict[message.from_user.id]['issue_URI'] = create_new_issue(
+                    users_dict[message.from_user.id]['issue_URI'] = create_new_CLOSED_issue(
                         subject=users_dict[message.from_user.id]['text'][:254],
                         description=users_dict[message.from_user.id]['text'],
                         username=allow_ids[str(message.from_user.id)],
